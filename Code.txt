@@ -1,0 +1,38 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class GameLoop : MonoBehaviour
+{
+
+    private StartGame startGame;
+
+    [SerializeField] Tile tile;
+    [SerializeField] float timeBetweenSpawn;
+    [SerializeField] int Xrange = 3;
+    [SerializeField] Transform newParent;
+
+
+    void Start()
+    {
+        startGame = FindObjectOfType<StartGame>();
+        print("I am in start");
+        if (startGame.state == StartGame.State.playing)
+        {
+            StartCoroutine(TileSpawner());
+        }
+        
+    }
+
+   IEnumerator TileSpawner()
+    {
+        while(true)
+        {
+            var Xposition = Random.Range(-Xrange, Xrange);
+            var prefab = Instantiate(tile, new Vector3(Xposition, 3, 20), Quaternion.identity);
+            prefab.transform.parent = newParent;
+            print("I am in loop");
+            yield return new WaitForSeconds(timeBetweenSpawn);
+        }
+    }
+}
